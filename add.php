@@ -6,11 +6,11 @@
     <?php
     //including the database connection file
     include_once("config.php");
-    if(isset($_POST['Submit'])){
-        $name = msqli_real_escape_string($mysqli, $_POST['name']);
-        $age = mysqli_real_escape_string($mysqli, $_POST['age']);
-        $email = mysqli_real_escape_string($mysqli,$_POST['email']);
+        $name =$_POST['name'];
+        $age = $_POST['age'];
+        $email = $_POST['email'];
 
+    if(isset($_POST['Submit'])){
         //checking empty fields
         if(empty($name)|| empty($age)|| empty($email)){
             if(empty($name)){
@@ -30,7 +30,7 @@
         //if all the fields are filled (not empty)
 
         //insert data to database
-        $result = mysqli_query($mysqli, "INSERT INTO users(name, age, email) VALUES('$name','$age','$email')");
+        $mysqli = mysqli_query($mysqli, "INSERT INTO users(name, age, email) VALUES('$name','$age','$email')");
     //display sucess message
 
     echo "<font color='green'>Data Added Successfully.";
