@@ -1,30 +1,81 @@
+<?php
+
+//including the database connection file
+
+include_once("config.php");
+
+//getting id from url
+$id = $_GET['id']; 
+
+if(isset($_POST['update'])){
+    $id = mysqli_real_escape_string($mysqli, $_POST['id']);
+    $name = mysqli_real_escape_string($mysqli, $_POST['name']);
+    $age = mysqli_real_escape_string($mysqli, $_POST['age']);
+    $email = mysqli_real_escape_string($mysqli, $_POST['email']);
+
+    //checking empty fields
+    
+    if(empty($name)||empty($age)||empty($email)){
+
+        if(empty($name)){
+            echo "<font color='red'>Name field is empty.</font><br/>";
+        }
+        if(empty($age)){
+            echo "<font color='red'> Age field is empty.</font><br/>";
+        }
+        if(empty($email)){
+            echo "<font color='red'> email field is empty.</font><br/>";
+        }
+    }
+    else{
+        //updating the table
+        $result = mysqli_query($mysqli, "UPDATE users SET name= '$name', age='$age', email='$email' WHERE id=$id");
+
+        //redirecting to the display page. In our case, it is index.php
+        header("Location:index.php");
+    }
+    
+}
+?>
+<?php
+
+
+//selecting data associated with this particular id
+$result = mysqli_query($mysqli, "SELECT * FROM users WHERE id=$id");
+
+while($res = mysqli_fetch_array($result)){
+    $name = $res['name'];
+    $age= $res['age'];
+    $email = $res['email'];
+}
+?>
 <html>
     <head>
-        <title>Add Data</title>
+        <title>Edit Data</title>
     </head>
-<body>
-    <a href="index.php">HOME</a>
-    <br><br/>
+    <body>
+        <a href="index.php">Home</a>
+        <br><br/>
 
-    <form action="add.php" method="post" name="form1">
-        <table width="25%" border = "0">
-            <tr>
-                <td>Name</td>
-                <td><input type="text" name="name"></td>
-            </tr>
-            <tr>
-                <td>Age</td>
-                <td><input type="text" name="age"></td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td><input type="text" name="email"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" name="submit" value="Add"></td>
-            </tr>
-        </table>
-    </form>
-</body>
+        <form name="form1" method="post" action="edit.php">
+            <table border="0">
+                <tr>
+                    <td>Name: </td>
+                    <td><input type="text" name="name" value="<?php echo $name;?>"></td>
+                </tr>
+                <tr>
+                    <td>Age: </td>
+                    <td><input type="text" name="age" value="<?php echo $age;?>"></td>
+                </tr>
+                <tr>
+                    <td>Email: </td>
+                    <td><input type="text" name="email" value="<?php echo $email;?>"></td>
+                </tr>
+                <tr>
+                    <td><input type="hidden" name="id" value=<?php echo $_GET['id'];?>></td>
+                    <td><input type="submit" name="update" value="Update"></td>
+                </tr>
+            </table>
+        </form>
+    </body>
 </html>
